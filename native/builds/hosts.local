@@ -1,0 +1,37 @@
+[db]
+dbhost ansible_ssh_host=10.0.2.15
+
+[db:vars]
+db_name=sso-integrate
+mapped_port=27017
+
+[sso]
+ssohost ansible_ssh_host=10.0.2.15
+
+[sso:vars]
+mapped_port=5100
+test_path=http://10.0.2.15:5100/sms/services/sso/v0.1/users/countries
+app_service_name=sso
+socket_file=/tmp/sso.sock
+access_log=/var/log/sms-service-sso-access.log
+error_log=/var/log/sms-service-sso-error.log
+gunicorn_config_file=sms_config_sso.py
+
+[all:children]
+db
+sso
+
+[all:vars]
+mode=http
+
+backend_env=sso-backend
+backend_version=master
+backend_repo=faical-yannick-congo/sso-backend
+anacondadir=anaconda
+debug=True
+env_type=development
+ansible_ssh_private_key_file=
+ansible_connection=local
+ansible_ssh_user=fyc
+backend_location=/home/fyc/sms-services
+ssl_location=/home/fyc/sms-sso-ssl

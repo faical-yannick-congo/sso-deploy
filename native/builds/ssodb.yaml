@@ -1,0 +1,9 @@
+- name: install ssodb
+  shell: "{{ env_path }}/python setup.py install"
+  args:
+    chdir: "{{ backend_path }}/sso-db"
+
+- name: check import ssodb
+  shell: "{{ python }} -c \"import ssodb\""
+  args:
+    chdir: "{{ backend_path }}/sso-db"

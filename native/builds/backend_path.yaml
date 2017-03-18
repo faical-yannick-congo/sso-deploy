@@ -1,0 +1,24 @@
+- name: install git
+  apt:
+    name: git
+    state: present
+    force: yes
+  become: true
+
+- name: Get playbook path
+  shell: cd {{ backend_location }}; git rev-parse --show-toplevel
+  register: rev_parse
+  ignore_errors: true
+
+- name: set backend_path local
+  set_fact:
+    backend_path: "{{ rev_parse.stdout }}"
+  when: rev_parse.rc == 0
+
+- name: set backend_path default
+  set_fact:
+    backend_path: "{{ default_backend_path }}"
+  when: rev_parse.rc != 0
+
+- name: echo rev_parse
+  shell: echo {{ rev_parse }}
